@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA</title>
+</head>
+<body>
+    <script src="https://unpkg.com/brain.js"></script>
+    <div>
+        <input type="color" oninput="updateColor(this.value)">
+    </div>
+    <div style="padding: 20px; text-align:center; border-radius:10px; margin-top:50px;" id="sitio"><h2>Hola mundo</h2></div>
+    <script type="text/javascript">
+        var network = new brain.NeuralNetwork();
+
+        network.train([
+            { input: { rojo: 0, verde: 0, azul: 0 }, output: { color: 1 } },
+            { input: { rojo: 1, verde: 1, azul: 1 }, output: { color: 0 } },
+            { input: { rojo: 0, verde: 1, azul: 0 }, output: { color: 0 } },
+            { input: { rojo: 1, verde: 0, azul: 0 }, output: { color: 1 } },
+            { input: { rojo: 1, verde: 1, azul: 0.75 }, output: { color: 1 } },
+            { input: { rojo: 1, verde: 0.43, azul: 1 }, output: { color: 1 } },
+        ]);
+
+        function updateColor(color) {
+            var div = document.getElementById("sitio");
+            div.style.backgroundColor = color;
+
+            var entrada = {
+                rojo: parseInt(color.substr(1, 2), 16) / 255,
+                verde: parseInt(color.substr(3, 2), 16) / 255,
+                azul: parseInt(color.substr(5, 2), 16) / 255
+            };
+
+            var resultado = network.run(entrada);
+
+            console.log(resultado);
+
+            if (resultado.color > 0.5) {
+                div.style.color = "white";
+            }  else {
+                div.style.color = "black";
+            }
+            
+        }
+    </script>
+</body>
+</html>
